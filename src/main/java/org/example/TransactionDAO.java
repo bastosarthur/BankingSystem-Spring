@@ -7,7 +7,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Repository;
+import jakarta.annotation.PostConstruct;
+
+
+@Repository
 public class TransactionDAO {
+
+    @PostConstruct
+    public void initialize() {
+        System.out.println("TransactionDAO initialized successfully");
+    }
 
     public int persistTransaction(Session session, BankTransaction BankTransaction) {
         session.persist(BankTransaction);

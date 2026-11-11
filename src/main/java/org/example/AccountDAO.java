@@ -2,7 +2,17 @@ package org.example;
 
 import org.hibernate.Session;
 
+import org.springframework.stereotype.Repository;
+import jakarta.annotation.PostConstruct;
+
+
+@Repository
 public class AccountDAO {
+
+    @PostConstruct
+    public void initialize() {
+        System.out.println("AccountDAO initialized successfully");
+    }
 
     public int persistAccount(Session session, Account account) {
         session.persist(account);

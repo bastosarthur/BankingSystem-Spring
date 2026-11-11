@@ -8,9 +8,26 @@ import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
+
+
+@Service
 public class AccountService {
-    AccountDAO accDAO = new AccountDAO();
-    TransactionDAO transactionDAO = new TransactionDAO();
+
+    private final TransactionDAO transactionDAO;
+
+    private final AccountDAO accDAO;
+
+    public AccountService(TransactionDAO transactionDAO, AccountDAO accDAO) {
+        this.transactionDAO = transactionDAO;
+        this.accDAO = accDAO;
+    }
+
+    @PostConstruct
+    public void initialize() {
+        System.out.println("AccountService initialized successfully");
+    }
 
     public int createAccount(Account account, String password) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -21,7 +38,8 @@ public class AccountService {
             Transaction transaction = session.beginTransaction();
             try {
                 int accountNumber = accDAO.persistAccount(session, account);
-                int password_success = accDAO.persistPassword(session, accountNumber, password);
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+                int password_success = accDAO.persistPassword(session, accountNumber, hashedPassword);
                 if (password_success != 1) {
                     transaction.rollback();
                     return -2; // ACCOUNT_PASSWORD NOT INSERTED WITH NEW VALUE.
