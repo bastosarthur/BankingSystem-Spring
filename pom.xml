@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent> <!-- 1st thing when creating a Spring application -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.1</version>
+        <relativePath/>
+    </parent>
+
     <groupId>org.example</groupId>
     <artifactId>BankingSystem</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -12,9 +19,22 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version> <!-- Specify the java version -->
     </properties>
 
     <dependencies>
+        <!-- Spring starter -->
+        <dependency> <!-- Spring boot starter dependency, importing Spring Core libraries -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Spring MVC Web dependency -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- Hibernate ORM -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -36,5 +56,14 @@
             <version>0.4</version>
         </dependency>
     </dependencies>
+
+    <build> <!-- Spring plugins -->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
