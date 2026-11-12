@@ -1,11 +1,12 @@
 package org.example;
 
+import org.example.dto.CreateAccountRequest;
+import org.example.dto.LoginRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
@@ -29,5 +30,29 @@ public class AccountController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(AccountNumber);
+    }
+
+    @PostMapping("/{login}")
+    public ResponseEntity<?> accountLogin(@RequestBody LoginRequest request) {
+
+        Account loggedAccount = accService.accountLogin(request.getAccountNumber(), request.getPassword());
+
+        if (loggedAccount == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid account number or password"); // 401
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(loggedAccount);
+    }
+
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<?> getBalance(@PathVariable int accountNumber) {
+
+        BigDecimal balance = accService.getBalance(accountNumber);
+
+        if (balance == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(balance);
     }
 }

@@ -1,4 +1,6 @@
-package org.example;
+package org.example.dto;
+
+import org.example.Account;
 
 public class CreateAccountRequest {
 

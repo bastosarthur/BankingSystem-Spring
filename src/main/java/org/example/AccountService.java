@@ -71,17 +71,14 @@ public class AccountService {
         }
     }
 
-    public int deposit(Account account, BigDecimal amount) {
-        if (!account.isLogged()) {
-            return -1; // ACCOUNT NOT LOGGED IN
-        }
+    public int deposit(int accountNumber, BigDecimal amount) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Account managedAccount = accDAO.findAccount(session, account.getAccountNumber());
+                Account managedAccount = accDAO.findAccount(session, accountNumber);
                 if (managedAccount == null) {
                     transaction.rollback();
-                    return -2; // ACCOUNT NOT FOUND ON THE DATABASE
+                    return -1; // ACCOUNT NOT FOUND ON THE DATABASE
                 }
                 managedAccount.setBalance(managedAccount.getBalance().add(amount));
                 BankTransaction BankTransaction = new BankTransaction("deposit", null,
@@ -89,7 +86,7 @@ public class AccountService {
                 int transactionId = transactionDAO.persistTransaction(session, BankTransaction);
                 if (transactionId == 0) {
                     transaction.rollback();
-                    return -3; // FAILED TO PERSIST TRANSACTION
+                    return -2; // FAILED TO PERSIST TRANSACTION
                 }
 
                 transaction.commit();
@@ -157,9 +154,9 @@ public class AccountService {
         }
     }
 
-    public BigDecimal getBalance(Account account) {
+    public BigDecimal getBalance(int accountNumber) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Account managedAccount = accDAO.findAccount(session, account.getAccountNumber());
+            Account managedAccount = accDAO.findAccount(session, accountNumber);
             if (managedAccount == null) {
                 return null;
             }
