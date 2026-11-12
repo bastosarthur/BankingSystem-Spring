@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -165,12 +166,38 @@ public class AccountService {
         }
     }
 
-    public List<BankTransaction> getAccountTransactions(Account account) {
+    public List<FindTransactionResponse> getAccountTransactions(int accountNumber) {
+        /*
         if (!account.isLogged()) {
             return null;
         }
+        */
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return transactionDAO.findAccountTransactions(session, account.getAccountNumber());
+            List<BankTransaction> transactionList = transactionDAO.findAccountTransactions(
+                    session, accountNumber);
+
+            if (transactionList.isEmpty()) {
+                return null;
+            }
+
+            List<FindTransactionResponse> requestResponseList = new ArrayList<>();
+            String status;
+            for (BankTransaction transaction : transactionList) {
+                if (transaction.getStatus()) {
+                    status = "CONFIRMED";
+                } else {
+                    status = "CANCELED";
+                }
+                Integer recipient =
+                        transaction.getRecipient() == null ? null : transaction.getRecipient().getAccountNumber();
+                Integer sender =
+                        transaction.getSender() == null ? null : transaction.getSender().getAccountNumber();
+
+                requestResponseList.add(new FindTransactionResponse(
+                        transaction.getAmount(), transaction.getId(), recipient,
+                        sender, status, transaction.getTransactionDate(), transaction.getType()));
+            }
+            return requestResponseList;
         }
     }
 

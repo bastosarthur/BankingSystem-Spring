@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -60,5 +62,16 @@ public class TransactionController {
 
         return ResponseEntity.status(HttpStatus.OK).body(requestResponse);
 
+    }
+
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<?> accountTransactionHistory(@PathVariable int accountNumber) {
+
+        List<FindTransactionResponse> requestResponseList = accService.getAccountTransactions(accountNumber);
+
+        if (requestResponseList == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No transactions found."); // Status 404
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(requestResponseList);
     }
 }
