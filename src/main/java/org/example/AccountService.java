@@ -101,21 +101,19 @@ public class AccountService {
         }
     }
 
-    public int withdraw(Account account, BigDecimal amount) {
-        if (!account.isLogged()) {
-            return -1; // ACCOUNT NOT LOGGED IN
-        }
+    public int withdraw(int accountNumber, BigDecimal amount) {
+
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Account managedAccount = accDAO.findAccount(session, account.getAccountNumber());
+                Account managedAccount = accDAO.findAccount(session, accountNumber);
                 if (managedAccount == null) {
                     transaction.rollback();
-                    return -2; // ACCOUNT NOT FOUND ON THE DATABASE
+                    return -1; // ACCOUNT NOT FOUND ON THE DATABASE
                 }
                 if (managedAccount.getBalance().compareTo(amount) < 0) {
                     transaction.rollback();
-                    return -3; // NOT ENOUGH BALANCE.
+                    return -2; // NOT ENOUGH BALANCE.
                 }
                 managedAccount.setBalance(managedAccount.getBalance().subtract(amount));
                 BankTransaction BankTransaction = new BankTransaction("withdraw", managedAccount,
@@ -123,7 +121,7 @@ public class AccountService {
                 int transactionId = transactionDAO.persistTransaction(session, BankTransaction);
                 if (transactionId == 0) {
                     transaction.rollback();
-                    return -4; // ERROR PERSISTING THE TRANSACTION;
+                    return -3; // ERROR PERSISTING THE TRANSACTION;
                 }
                 transaction.commit();
                 return transactionId;

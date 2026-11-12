@@ -6,6 +6,8 @@ public class LoginRequest {
 
     private String password;
 
+    private LoginRequest() {}
+
     public int getAccountNumber() {
         return accountNumber;
     }

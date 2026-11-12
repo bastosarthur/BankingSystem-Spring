@@ -8,6 +8,8 @@ public class DepositRequest {
 
     private BigDecimal amount;
 
+    private DepositRequest() {}
+
     public int getAccountNumber() {
         return accountNumber;
     }

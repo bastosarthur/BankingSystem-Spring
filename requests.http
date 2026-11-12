@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "account": {
-    "cpf": "10716611406"
+    "cpf": "10716611407"
   },
   "password": "N0rw3g1an6620"
 }
@@ -14,18 +14,27 @@ POST http://localhost:8080/accounts/login
 Content-Type: application/json
 
 {
-  "accountNumber": 100027,
+  "accountNumber": 100028,
   "password": "N0rw3g1an6620"
 }
 
 ### Get Account Balance
-GET http://localhost:8080/accounts/100015
+GET http://localhost:8080/accounts/100024
 
-### Deposit Transaction
+### Deposit Request
 PUT http://localhost:8080/transactions/deposit
 Content-Type: application/json
 
 {
-  "accountNumber": 100027,
+  "accountNumber": 100028,
   "amount": 1500.00
+}
+
+### Withdraw Request
+PUT http://localhost:8080/transactions/withdraw
+Content-Type: application/json
+
+{
+  "accountNumber": 100023,
+  "amount": 750.00
 }

@@ -8,7 +8,7 @@ public class CreateAccountRequest {
 
     private String password;
 
-    public CreateAccountRequest() {};
+    public CreateAccountRequest() {}
 
     public Account getAccount() {
         return account;
