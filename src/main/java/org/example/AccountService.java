@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.dto.FindTransactionResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.math.BigDecimal;
@@ -134,12 +135,33 @@ public class AccountService {
         }
     }
 
-    public BankTransaction getTransaction(Account account, int transactionId) {
+    public FindTransactionResponse getTransaction(int accountNumber, int transactionId) {
+        /*
         if (!account.isLogged()) {
             return null;
         }
+        */
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return transactionDAO.findTransaction(session, account.getAccountNumber(), transactionId);
+            BankTransaction transaction = transactionDAO.findTransaction(session, accountNumber, transactionId);
+
+            if (transaction == null) {
+                return null;
+            }
+
+            String status;
+            if (transaction.getStatus()) {
+                status = "CONFIRMED";
+            } else {
+                status = "CANCELED";
+            }
+            Integer recipient =
+                    transaction.getRecipient() == null ? null : transaction.getRecipient().getAccountNumber();
+            Integer sender =
+                    transaction.getSender() == null ? null : transaction.getSender().getAccountNumber();
+
+            return new FindTransactionResponse(
+                    transaction.getAmount(), transaction.getId(), recipient,
+                    sender, status, transaction.getTransactionDate(), transaction.getType());
         }
     }
 

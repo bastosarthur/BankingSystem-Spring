@@ -38,3 +38,6 @@ Content-Type: application/json
   "accountNumber": 100023,
   "amount": 750.00
 }
+
+### Find Transaction Request
+GET http://localhost:8080/transactions?accountNumber=100015&transactionId=127

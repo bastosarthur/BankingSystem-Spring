@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.dto.DepositRequest;
+import org.example.dto.FindTransactionResponse;
 import org.example.dto.WithdrawRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +45,20 @@ public class TransactionController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(transactionId);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findTransaction(
+            @RequestParam int accountNumber, @RequestParam int transactionId) {
+
+        FindTransactionResponse requestResponse =
+                accService.getTransaction(accountNumber, transactionId);
+
+        if (requestResponse == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestResponse);
+
     }
 }
