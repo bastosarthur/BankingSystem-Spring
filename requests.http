@@ -44,3 +44,16 @@ GET http://localhost:8080/transactions?accountNumber=100015&transactionId=127
 
 ### Find Account Transaction History
 GET http://localhost:8080/transactions/100015
+
+### Transfer Request
+PUT http://localhost:8080/transactions/transfer
+Content-Type: application/json
+
+{
+  "senderAccount": 100015,
+  "recipientAccount": 100015,
+  "amount": 1500.00
+}
+
+### Transactions By Date Request
+GET http://localhost:8080/transactions/100015/2026-10-10

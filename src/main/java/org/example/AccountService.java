@@ -211,17 +211,19 @@ public class AccountService {
         }
     }
 
-    public int transfer(Account account, int recipientAccount, BigDecimal amount) {
+    public int transfer(int senderAccount, int recipientAccount, BigDecimal amount) {
+        /*
         if (!account.isLogged()) {
             return -1; // ACCOUNT NOT LOGGED IN
         }
-        if (account.getAccountNumber() == recipientAccount) {
-            return -5; // TRANSFER TO SAME ACCOUNT
+        */
+        if (senderAccount == recipientAccount) {
+            return -1; // TRANSFER TO SAME ACCOUNT
         }
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Account managedSender = accDAO.findAccount(session, account.getAccountNumber());
+                Account managedSender = accDAO.findAccount(session, senderAccount);
                 if (managedSender == null) {
                     transaction.rollback();
                     return -2; // SENDER ACCOUNT NOT FOUND ON THE DATABASE
@@ -255,12 +257,38 @@ public class AccountService {
         }
     }
 
-    public List<BankTransaction> searchTransactionsByDate(Account account, LocalDate date) {
+    public List<FindTransactionResponse> searchTransactionsByDate(int accountNumber, LocalDate date) {
+        /*
         if (!account.isLogged()) {
             return null;
         }
+        */
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return transactionDAO.findAccountTransactionsByDate(session, account.getAccountNumber(), date);
+            List<BankTransaction> transactionByDateList =
+                    transactionDAO.findAccountTransactionsByDate(session, accountNumber, date);
+
+            if (transactionByDateList.isEmpty()) {
+                return null;
+            }
+
+            List<FindTransactionResponse> requestResponseList = new ArrayList<>();
+            String status;
+            for (BankTransaction transaction : transactionByDateList) {
+                if (transaction.getStatus()) {
+                    status = "CONFIRMED";
+                } else {
+                    status = "CANCELED";
+                }
+                Integer recipient =
+                        transaction.getRecipient() == null ? null : transaction.getRecipient().getAccountNumber();
+                Integer sender =
+                        transaction.getSender() == null ? null : transaction.getSender().getAccountNumber();
+
+                requestResponseList.add(new FindTransactionResponse(
+                        transaction.getAmount(), transaction.getId(), recipient,
+                        sender, status, transaction.getTransactionDate(), transaction.getType()));
+            }
+            return requestResponseList;
         }
     }
 
