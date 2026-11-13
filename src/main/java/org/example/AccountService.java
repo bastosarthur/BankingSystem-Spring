@@ -322,12 +322,33 @@ public class AccountService {
         }
     }
 
-    public List<BankTransaction> withdrawList(Account account) {
+    public List<FindTransactionResponse> withdrawList(int accountNumber) {
+        /*
         if (!account.isLogged()) {
             return null;
         }
+        */
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return transactionDAO.withdrawTransactions(session, account.getAccountNumber());
+            List<BankTransaction> withdrawList = transactionDAO.withdrawTransactions(session, accountNumber);
+
+            List<FindTransactionResponse> requestResponseList = new ArrayList<>();
+            String status;
+            for (BankTransaction transaction : withdrawList) {
+                if (transaction.getStatus()) {
+                    status = "CONFIRMED";
+                } else {
+                    status = "CANCELED";
+                }
+                Integer recipient =
+                        transaction.getRecipient() == null ? null : transaction.getRecipient().getAccountNumber();
+                Integer sender =
+                        transaction.getSender() == null ? null : transaction.getSender().getAccountNumber();
+
+                requestResponseList.add(new FindTransactionResponse(
+                        transaction.getAmount(), transaction.getId(), recipient,
+                        sender, status, transaction.getTransactionDate(), transaction.getType()));
+            }
+            return requestResponseList;
         }
     }
 }

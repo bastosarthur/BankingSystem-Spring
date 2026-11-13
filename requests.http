@@ -60,3 +60,6 @@ GET http://localhost:8080/transactions/100015/2026-10-10
 
 ### Deposit History Request
 GET http://localhost:8080/transactions/deposits/100015
+
+### Withdraw History Request
+GET http://localhost:8080/transactions/withdraws/100015

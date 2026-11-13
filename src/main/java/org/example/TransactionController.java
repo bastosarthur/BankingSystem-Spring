@@ -125,10 +125,21 @@ public class TransactionController {
 
         List<FindTransactionResponse> depositList = accService.depositList(accountNumber);
         if (depositList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No deposits found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No deposits found."); // Status 404
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(depositList);
+        return ResponseEntity.status(HttpStatus.OK).body(depositList); // Status 200
+    }
+
+    @GetMapping("/withdraws/{accountNumber}")
+    public ResponseEntity<?> withdrawList(@PathVariable int accountNumber) {
+
+        List<FindTransactionResponse> withdrawList = accService.withdrawList(accountNumber);
+
+        if (withdrawList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No withdraws found."); // Status 404
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(withdrawList); // Status 200
     }
 
 }
