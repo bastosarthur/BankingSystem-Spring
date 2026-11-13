@@ -57,3 +57,6 @@ Content-Type: application/json
 
 ### Transactions By Date Request
 GET http://localhost:8080/transactions/100015/2026-10-10
+
+### Deposit History Request
+GET http://localhost:8080/transactions/deposits/100015

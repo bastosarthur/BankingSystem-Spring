@@ -120,4 +120,15 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.OK).body(transactionsByDateList);
     }
 
+    @GetMapping("/deposits/{accountNumber}")
+    public ResponseEntity<?> depositList(@PathVariable int accountNumber) {
+
+        List<FindTransactionResponse> depositList = accService.depositList(accountNumber);
+        if (depositList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No deposits found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(depositList);
+    }
+
 }
