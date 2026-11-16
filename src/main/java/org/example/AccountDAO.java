@@ -5,6 +5,11 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import jakarta.annotation.PostConstruct;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
 
 @Repository
 public class AccountDAO {
@@ -53,5 +58,14 @@ public class AccountDAO {
                 """, Boolean.class)
                 .setParameter("cpf", cpf)
                 .getSingleResult();
+    }
+
+    public List<Account> accountsByBalance(Session session, BigDecimal balance) {
+        return session.createQuery("""
+                FROM Account
+                WHERE balance >= :balance
+                """, Account.class)
+                .setParameter("balance", balance)
+                .getResultList();
     }
 }

@@ -4,9 +4,9 @@ Content-Type: application/json
 
 {
   "account": {
-    "cpf": "10716611407"
+    "cpf": "11111111111"
   },
-  "password": "N0rw3g1an6620"
+  "password": "10101010"
 }
 
 ### Account Login
@@ -14,19 +14,19 @@ POST http://localhost:8080/accounts/login
 Content-Type: application/json
 
 {
-  "accountNumber": 100028,
-  "password": "N0rw3g1an6620"
+  "accountNumber": 100029,
+  "password": "10101010"
 }
 
 ### Get Account Balance
-GET http://localhost:8080/accounts/100024
+GET http://localhost:8080/accounts/100029
 
 ### Deposit Request
 PUT http://localhost:8080/transactions/deposit
 Content-Type: application/json
 
 {
-  "accountNumber": 100028,
+  "accountNumber": 100029,
   "amount": 1500.00
 }
 
@@ -35,12 +35,12 @@ PUT http://localhost:8080/transactions/withdraw
 Content-Type: application/json
 
 {
-  "accountNumber": 100023,
+  "accountNumber": 100029,
   "amount": 750.00
 }
 
 ### Find Transaction Request
-GET http://localhost:8080/transactions?accountNumber=100015&transactionId=127
+GET http://localhost:8080/transactions?accountNumber=100029&transactionId=146
 
 ### Find Account Transaction History
 GET http://localhost:8080/transactions/100015
@@ -50,16 +50,19 @@ PUT http://localhost:8080/transactions/transfer
 Content-Type: application/json
 
 {
-  "senderAccount": 100015,
+  "senderAccount": 100029,
   "recipientAccount": 100015,
-  "amount": 1500.00
+  "amount": 500.00
 }
 
 ### Transactions By Date Request
-GET http://localhost:8080/transactions/100015/2026-10-10
+GET http://localhost:8080/transactions/100015/2026-10-18
 
 ### Deposit History Request
 GET http://localhost:8080/transactions/deposits/100015
 
 ### Withdraw History Request
 GET http://localhost:8080/transactions/withdraws/100015
+
+### AccountList by Balance
+GET http://localhost:8080/accounts?balance=1500

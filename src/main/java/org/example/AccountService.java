@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.dto.AccResponseRequest;
 import org.example.dto.FindTransactionResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -57,7 +58,7 @@ public class AccountService {
         }
     }
 
-    public Account accountLogin(int accountNumber, String tryPassword) {
+    public AccResponseRequest accountLogin(int accountNumber, String tryPassword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Account account = accDAO.findAccount(session, accountNumber);
             if (account == null) {
@@ -65,9 +66,11 @@ public class AccountService {
             }
             String hashedPassword = accDAO.getPasswordHash(session, account.getAccountNumber());
             if (BCrypt.checkpw(tryPassword, hashedPassword)) {
-                account.setLogged(true);
-                account.setLoginTime(System.currentTimeMillis());
-                return account;
+                AccResponseRequest accResponse = new AccResponseRequest();
+                accResponse.setAccountNumber(account.getAccountNumber());
+                accResponse.setCpf(account.getCpf());
+                accResponse.setBalance(account.getBalance());
+                return accResponse;
             }
             return null;
         }
@@ -349,6 +352,23 @@ public class AccountService {
                         sender, status, transaction.getTransactionDate(), transaction.getType()));
             }
             return requestResponseList;
+        }
+    }
+
+    public List<AccResponseRequest> accountsByBalance(BigDecimal balance) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<Account> accountByBalanceList = accDAO.accountsByBalance(session, balance);
+
+            if (accountByBalanceList.isEmpty()) {
+                return null;
+            }
+            List<AccResponseRequest> accResponseList = new ArrayList<>();
+            for (Account account : accountByBalanceList) {
+                accResponseList.add(new AccResponseRequest(
+                        account.getAccountNumber(), account.getCpf(), account.getBalance()));
+
+            }
+            return accResponseList;
         }
     }
 }
