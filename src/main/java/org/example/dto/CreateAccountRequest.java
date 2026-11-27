@@ -1,6 +1,6 @@
 package org.example.dto;
 
-import org.example.Account;
+import org.example.entities.Account;
 
 public class CreateAccountRequest {
 

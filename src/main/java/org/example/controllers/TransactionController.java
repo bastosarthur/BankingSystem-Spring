@@ -1,5 +1,6 @@
-package org.example;
+package org.example.controllers;
 
+import org.example.services.AccountService;
 import org.example.dto.DepositRequest;
 import org.example.dto.FindTransactionResponse;
 import org.example.dto.TransferRequest;
@@ -26,7 +27,7 @@ public class TransactionController {
 
         int transactionId = accService.deposit(request.getAccountNumber(), request.getAmount());
         if (transactionId == -1) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found."); // status 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found."); // Status 404
         }
         else if (transactionId == -2) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal error. Transaction rolled back");
@@ -52,14 +53,13 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findTransaction(
-            @RequestParam int accountNumber, @RequestParam int transactionId) {
+    public ResponseEntity<?> findTransaction(@RequestParam int accountNumber, @RequestParam int transactionId) {
 
         FindTransactionResponse requestResponse =
                 accService.getTransaction(accountNumber, transactionId);
 
         if (requestResponse == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found."); // STATUS 404
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(requestResponse);

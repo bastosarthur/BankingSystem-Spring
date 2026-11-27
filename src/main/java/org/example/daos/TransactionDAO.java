@@ -1,5 +1,6 @@
-package org.example;
+package org.example.daos;
 
+import org.example.entities.BankTransaction;
 import org.hibernate.Session;
 
 import java.math.BigDecimal;

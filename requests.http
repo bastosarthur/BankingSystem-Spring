@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "account": {
-    "cpf": "11111111111"
+    "cpf": "10716611406"
   },
   "password": "10101010"
 }
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "accountNumber": 100029,
-  "amount": 1500.00
+  "amount": 3000.00
 }
 
 ### Withdraw Request
@@ -35,15 +35,15 @@ PUT http://localhost:8080/transactions/withdraw
 Content-Type: application/json
 
 {
-  "accountNumber": 100029,
-  "amount": 750.00
+  "accountNumber": 100000,
+  "amount": 250.00
 }
 
 ### Find Transaction Request
-GET http://localhost:8080/transactions?accountNumber=100029&transactionId=146
+GET http://localhost:8080/transactions?accountNumber=100029&transactionId=149
 
 ### Find Account Transaction History
-GET http://localhost:8080/transactions/100015
+GET http://localhost:8080/transactions/100029
 
 ### Transfer Request
 PUT http://localhost:8080/transactions/transfer
@@ -56,13 +56,13 @@ Content-Type: application/json
 }
 
 ### Transactions By Date Request
-GET http://localhost:8080/transactions/100015/2026-10-18
+GET http://localhost:8080/transactions/100029/2026-11-27
 
 ### Deposit History Request
-GET http://localhost:8080/transactions/deposits/100015
+GET http://localhost:8080/transactions/deposits/100029
 
 ### Withdraw History Request
-GET http://localhost:8080/transactions/withdraws/100015
+GET http://localhost:8080/transactions/withdraws/100029
 
 ### AccountList by Balance
-GET http://localhost:8080/accounts?balance=1500
+GET http://localhost:8080/accounts?balance=100

@@ -26,8 +26,8 @@
             validate
         </property>
 
-        <mapping class="org.example.Account"/>
-        <mapping class="org.example.BankTransaction"/>
+        <mapping class="org.example.entities.Account"/>
+        <mapping class="org.example.entities.BankTransaction"/>
 
     </session-factory>
 </hibernate-configuration>

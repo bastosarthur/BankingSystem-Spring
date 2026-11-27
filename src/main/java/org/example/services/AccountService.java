@@ -1,7 +1,12 @@
-package org.example;
+package org.example.services;
 
+import org.example.HibernateUtil;
+import org.example.daos.AccountDAO;
+import org.example.daos.TransactionDAO;
 import org.example.dto.AccResponseRequest;
 import org.example.dto.FindTransactionResponse;
+import org.example.entities.Account;
+import org.example.entities.BankTransaction;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.math.BigDecimal;

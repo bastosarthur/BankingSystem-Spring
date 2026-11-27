@@ -1,5 +1,6 @@
-package org.example;
+package org.example.controllers;
 
+import org.example.services.AccountService;
 import org.example.dto.AccResponseRequest;
 import org.example.dto.CreateAccountRequest;
 import org.example.dto.LoginRequest;

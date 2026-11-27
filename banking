@@ -1,0 +1,59 @@
+create table accounts
+(
+    account_number integer generated always as identity (start with 100000)
+        primary key,
+    cpf            varchar(11)              not null
+        constraint unique_cpf
+            unique,
+    balance        numeric(15, 2) default 0 not null
+)
+    using ???;
+
+alter table accounts
+    owner to postgres;
+
+create table account_password
+(
+    account  integer     not null
+        primary key
+        constraint account_pk
+            references accounts,
+    password varchar(60) not null
+        constraint password_hash_length
+            check (char_length((password)::text) = 60)
+)
+    using ???;
+
+alter table account_password
+    owner to postgres;
+
+create table transactions
+(
+    id                integer generated always as identity (start with 100)
+        primary key,
+    type              varchar(20)                         not null
+        constraint type_accepted
+            check ((type)::text = ANY
+                   ((ARRAY ['deposit'::character varying, 'withdraw'::character varying, 'transfer'::character varying])::text[])),
+    sender_account    integer
+        constraint sender_fk
+            references accounts,
+    recipient_account integer
+        constraint recipient_fk
+            references accounts,
+    amount            numeric(15, 2)                      not null
+        constraint valid_amount
+            check (amount > (0)::numeric),
+    status            boolean   default true              not null,
+    transaction_date  timestamp default CURRENT_TIMESTAMP not null,
+    constraint validate_transactions
+        check ((((type)::text = 'deposit'::text) AND (sender_account IS NULL) AND (recipient_account IS NOT NULL)) OR
+               (((type)::text = 'withdraw'::text) AND (sender_account IS NOT NULL) AND (recipient_account IS NULL)) OR
+               (((type)::text = 'transfer'::text) AND (sender_account IS NOT NULL) AND (recipient_account IS NOT NULL)))
+)
+    using ???;
+
+alter table transactions
+    owner to postgres;
+
+

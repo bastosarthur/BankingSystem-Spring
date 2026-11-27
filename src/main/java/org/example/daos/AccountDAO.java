@@ -1,13 +1,12 @@
-package org.example;
+package org.example.daos;
 
+import org.example.entities.Account;
 import org.hibernate.Session;
 
 import org.springframework.stereotype.Repository;
 import jakarta.annotation.PostConstruct;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
